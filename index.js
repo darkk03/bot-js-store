@@ -1,4 +1,6 @@
-const { AssortmentRequest } = require('../sredarazrobotki-bota/commands/list-store.js');
+const { AssortmentRequest } = require('../bot/commands/list-store.js');
+const { AboutShopRequest } = require('../bot/commands/aboutstore.js');
+const { Adminpanel } = require('../bot/commands/Admin.js');
 
 const token = '6739088421:AAG0w06wkY3qgLElHD8NZoA79UySrfKsNPU'
 const TelegramBot = require('node-telegram-bot-api');
@@ -10,13 +12,13 @@ bot.on('message', async (msg) => {
 
     if (text === 'start' || text === 'menu') {
         const keyboard = [
-            ['Ассортимент товаров', 'Заказ'],
-            ['О магазине', 'Профиль'],
-            ['Правила', 'Помощь'],
-            ['Отзывы']
+            ['📦 Ассортимент товаров', '🛒 Заказ'],
+            ['🏠 О магазине', '📋 Профиль'],
+            ['📜 Правила', '❓ Помощь'],
+            ['🌟 Отзывы']
         ];
 
-        await bot.sendMessage(chatId, '-----------------------------------', {
+        await bot.sendMessage(chatId, '-', {
             reply_markup: {
                 keyboard: keyboard,
                 one_time_keyboard: true,
@@ -25,26 +27,28 @@ bot.on('message', async (msg) => {
         });
     }
 
-    if (text === 'Ассортимент товаров') {
+    if (text.includes('Ассортимент товаров')) {
         await AssortmentRequest(bot, chatId);
     }
-    // else if (text === 'Заказ') {
+    // else if (text.includes('Заказ')) {
     //     await OrderRequest(bot, chatId);
     // }
-    // else if (text === 'О магазине') {
-    //     await AboutShopRequest(bot, chatId);
-    // }
-    // else if (text === 'Профиль') {
+    else if (text.includes('О магазине')) {
+        await AboutShopRequest(bot, chatId);
+    }
+    // else if (text.includes('Профиль')) {
     //     await ProfileRequest(bot, chatId);
     // }
-    // else if (text === 'Правила') {
+    // else if (text.includes('Правила')) {
     //     await RulesRequest(bot, chatId);
     // }
-    // else if (text === 'Помощь') {
+    // else if (text.includes('Помощь')) {
     //     await HelpRequest(bot, chatId);
     // }
-    // else if (text === 'Отзывы') {
+    // else if (text.includes('Отзывы')) {
     //     await ReviewsRequest(bot, chatId);
     // }
-    
+    else if (text === '1') {
+        await Adminpanel(bot, chatId);
+    }
 });
