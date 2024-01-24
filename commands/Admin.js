@@ -1,6 +1,6 @@
-const { addProductToDatabase } = require('../db/addtodb.js');
+const { additem } = require('../commands/admincomands/additem.js');
 
-async function Adminpanel (bot, chatId) {
+async function Adminpanel(bot, chatId) {
     const keyboard = [
         ['Добавить товар', 'Удалить товар'],
         ['Изменить товар', 'Выход']
@@ -14,17 +14,16 @@ async function Adminpanel (bot, chatId) {
         }
     });
 
-    bot.onText(/Добавить товар/, async (message) => {
-        const userId = message.from.id;
-        await bot.sendMessage(userId, 'Введите информацию о новом товаре:');
-        // Ждем следующего ввода от пользователя, например, имя товара, описание и т.д.
-        bot.on('text', async (message) => {
-            const newProductInfo = message.text;
-            // Обработка информации о товаре и добавление в базу данных
-            // Пример:
-            await addProductToDatabase(newProductInfo);
-            await bot.sendMessage(userId, 'Товар успешно добавлен!');
-        });
+    bot.on('message', async (msg) => {
+        const chatId = msg.chat.id;
+        const text = msg.text;
+
+        if (text && text.includes('Добавить товар')) {
+            const userId = msg.from.id;
+            const newProduct = {};
+
+            await additem(bot, userId, newProduct);
+        }
     });
 }
 

@@ -1,5 +1,8 @@
 const { AssortmentRequest } = require('../bot/commands/list-store.js');
 const { AboutShopRequest } = require('../bot/commands/aboutstore.js');
+const { RulesRequest } = require('../bot/commands/rules.js');
+const { HelpRequest } = require('../bot/commands/help.js');
+const { ReviewsRequest } = require('../bot/commands/feedback.js');
 const { Adminpanel } = require('../bot/commands/Admin.js');
 
 const token = '6739088421:AAG0w06wkY3qgLElHD8NZoA79UySrfKsNPU'
@@ -10,7 +13,7 @@ bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
     const text = msg.text;
 
-    if (text === 'start' || text === 'menu') {
+    if (text === '/start' || text === '/menu') {
         const keyboard = [
             ['📦 Ассортимент товаров', '🛒 Заказ'],
             ['🏠 О магазине', '📋 Профиль'],
@@ -27,27 +30,27 @@ bot.on('message', async (msg) => {
         });
     }
 
-    if (text.includes('Ассортимент товаров')) {
+    if (text && text.includes('Ассортимент товаров')) {
         await AssortmentRequest(bot, chatId);
     }
     // else if (text.includes('Заказ')) {
     //     await OrderRequest(bot, chatId);
     // }
-    else if (text.includes('О магазине')) {
+    else if (text && text.includes('О магазине')) {
         await AboutShopRequest(bot, chatId);
     }
     // else if (text.includes('Профиль')) {
     //     await ProfileRequest(bot, chatId);
     // }
-    // else if (text.includes('Правила')) {
-    //     await RulesRequest(bot, chatId);
-    // }
-    // else if (text.includes('Помощь')) {
-    //     await HelpRequest(bot, chatId);
-    // }
-    // else if (text.includes('Отзывы')) {
-    //     await ReviewsRequest(bot, chatId);
-    // }
+    else if (text && text.includes('Правила')) {
+        await RulesRequest(bot, chatId);
+    }
+    else if (text && text.includes('Помощь')) {
+        await HelpRequest(bot, chatId);
+    }
+    else if (text && text.includes('Отзывы')) {
+        await ReviewsRequest(bot, chatId);
+    }
     else if (text === '1') {
         await Adminpanel(bot, chatId);
     }
