@@ -40,21 +40,16 @@ async function AssortmentRequest(bot, chatId) {
                     messageText += `${index + 1}. ${product.info.name}\n${product.info.description}\n${product.info.price} руб.\n\n`;
                 });
     
+                const buttons = products.map((product) => {
+                    return { text: product.info.name, callback_data: '-' };
+                });
+                const inlineKeyboard = [buttons];
 
-                await bot.sendMessage(chatId, messageText, {
+                await bot.sendMessage(chatId, 'Товары категории 1:', {
                     reply_markup: {
-                        inline_keyboard: [
-                            [
-                                { text: 'товар 1', callback_data: '-' },
-                                { text: 'товар 2', callback_data: '-' }
-                            ],
-                            [
-                                { text: 'товар 3', callback_data: '-' },
-                                { text: 'товар 4', callback_data: '-' }
-                            ]
-                        ]
+                        inline_keyboard: inlineKeyboard
                     }
-                });                
+                });             
                 
             } catch (error) {
                 console.error("Error:", error);
