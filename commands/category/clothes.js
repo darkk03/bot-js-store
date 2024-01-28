@@ -1,4 +1,6 @@
-async function clothescat(bot, chatId, action) {
+const { AssortmentRequest } = require('../list-store.js');
+
+async function clothescat(bot, chatId, AssortmentRequest) {
     const MongoClient = require('mongodb').MongoClient;
     const url = "mongodb://localhost:27017/";
 
@@ -8,7 +10,6 @@ async function clothescat(bot, chatId, action) {
         await client.connect();
         const db = client.db("Store");
         const collection = db.collection("products");
-        // Используйте action для фильтрации продуктов по категории
         const products = await collection.find({ 'info.category': 'Категория 1' }).toArray();
 
         for (const product of products) {
@@ -17,11 +18,6 @@ async function clothescat(bot, chatId, action) {
             });
         }
 
-        let messageText = `Товары категории ${action}:\n\n`;
-        products.forEach((product, index) => {
-            messageText += `${index + 1}. ${product.info.name}\n${product.info.description}\n${product.info.price} руб.\n\n`;
-        });
-
         const buttons = products.map((product) => {
             return { text: product.info.name, callback_data: '-' };
         });
@@ -29,9 +25,11 @@ async function clothescat(bot, chatId, action) {
 
         await bot.sendMessage(chatId, 'Товары категории 1:', {
             reply_markup: {
-                inline_keyboard: inlineKeyboard
+                inline_keyboard: [...inlineKeyboard, [
+                    { text: 'Назад', callback_data: 'back' }
+                ]]
             }
-        });             
+        }); 
         
     } catch (error) {
         console.error("Error:", error);
@@ -39,6 +37,18 @@ async function clothescat(bot, chatId, action) {
     } finally {
         await client.close();
     }
+    bot.off('callback_query');
+
+    bot.on('callback_query', async (query) => {
+        const msg = query.message;
+        const chatId = msg.chat.id;
+        const messageId = msg.message_id;
+
+        if (query.data === 'back') {
+            bot.deleteMessage(chatId, messageId);
+            await AssortmentRequest(bot, chatId); 
+        }
+    });
 }
 
 module.exports = {
