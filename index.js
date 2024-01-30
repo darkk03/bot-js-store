@@ -4,6 +4,8 @@ const { RulesRequest } = require('../bot/commands/rules.js');
 const { HelpRequest } = require('../bot/commands/help.js');
 const { ReviewsRequest } = require('../bot/commands/feedback.js');
 const { Adminpanel } = require('../bot/commands/Admin.js');
+const { ProfileRequest } = require('../bot/commands/profile.js');
+const { addUserToDatabase } = require('../bot/db/profiledb.js');
 
 const token = '6739088421:AAG0w06wkY3qgLElHD8NZoA79UySrfKsNPU'
 const TelegramBot = require('node-telegram-bot-api');
@@ -20,6 +22,8 @@ bot.on('message', async (msg) => {
             ['📜 Правила 📜', '❓ Помощь ❓'],
             ['🌟 Отзывы 🌟']
         ];
+        
+        await addUserToDatabase(msg.from.id);
 
         await bot.sendMessage(chatId, '-', {
             reply_markup: {
@@ -30,28 +34,32 @@ bot.on('message', async (msg) => {
         });
     }
 
-    if (text && text.includes('Ассортимент товаров')) {
-        await AssortmentRequest(bot, chatId);
-    }
-    // else if (text.includes('Заказ')) {
-    //     await OrderRequest(bot, chatId);
-    // }
-    else if (text && text.includes('О магазине')) {
-        await AboutShopRequest(bot, chatId);
-    }
-    // else if (text.includes('Профиль')) {
-    //     await ProfileRequest(bot, chatId);
-    // }
-    else if (text && text.includes('Правила')) {
-        await RulesRequest(bot, chatId);
-    }
-    else if (text && text.includes('Помощь')) {
-        await HelpRequest(bot, chatId);
-    }
-    else if (text && text.includes('Отзывы')) {
-        await ReviewsRequest(bot, chatId);
-    }
-    else if (text === '1') {
-        await Adminpanel(bot, chatId);
+    
+
+    switch (true) {
+        case text && text.includes('Ассортимент товаров'):
+            await AssortmentRequest(bot, chatId, msg);
+            break;
+        // case text && text.includes('Заказ'):
+        //     await OrderRequest(bot, chatId);
+        //     break;
+        case text && text.includes('О магазине'):
+            await AboutShopRequest(bot, chatId);
+            break;
+        case text && text.includes('Профиль'):
+            await ProfileRequest(bot, chatId);
+            break;
+        case text && text.includes('Правила'):
+            await RulesRequest(bot, chatId);
+            break;
+        case text && text.includes('Помощь'):
+            await HelpRequest(bot, chatId);
+            break;
+        case text && text.includes('Отзывы'):
+            await ReviewsRequest(bot, chatId);
+            break;
+        case text === '1':
+            await Adminpanel(bot, chatId);
+            break;
     }
 });

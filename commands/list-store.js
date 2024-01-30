@@ -3,7 +3,6 @@ const { clothescat } = require('../commands/category/clothes.js');
 async function AssortmentRequest(bot, chatId) {
     const WebAppUrl = "https://192.168.18.165:8080//";
 
-
     await bot.sendMessage(chatId, "Активные категории в магазине:", {
         reply_markup: {
             inline_keyboard: [
@@ -29,45 +28,52 @@ async function AssortmentRequest(bot, chatId) {
             ]
         }
     });
+    await clothes(bot, { message: { chat: { id: chatId } } });
+}
 
-    const clothes = async (callbackQuery) => {
-        const action = callbackQuery.data;
-        const msg = callbackQuery.message;
-        const chatId = msg.chat.id;
-        const messageId = msg.message_id;
-    
-        if (action === '1') {
-            bot.deleteMessage(chatId, messageId);
-            await bot.sendMessage(chatId, 'Одежда', {
-                reply_markup: {
-                    inline_keyboard: [
-                        [
-                            { text: 'Сумки', callback_data: 'sumki' },
-                            { text: 'Обувь', callback_data: '2' }
-                        ],
-                        [
-                            { text: 'Шарфы', callback_data: '3' },
-                            { text: 'Тапки', callback_data: '4' }
-                        ]
+async function clothes(bot, callbackQuery) {
+
+    const action = callbackQuery.data;
+    const msg = callbackQuery.message;     
+    const chatId = callbackQuery.message.chat.id;
+    const messageId = msg.message_id;
+
+    if (action === '1') {
+        bot.deleteMessage(chatId, messageId);
+        await bot.sendMessage(chatId, 'Одежда', {
+            reply_markup: {
+                inline_keyboard: [
+                    [
+                        { text: 'Сумки', callback_data: 'sumki' },
+                        { text: 'Обувь', callback_data: '2' }
+                    ],
+                    [
+                        { text: 'Шарфы', callback_data: '3' },
+                        { text: 'Тапки', callback_data: '4' }
+                    ],
+                    [
+                        { text: 'Назад', callback_data: 'back' }
                     ]
-                }
-            });
-        }
-    
-        switch (action) {
-            case 'sumki':
-                bot.deleteMessage(chatId, messageId);
-                await clothescat(bot, chatId, AssortmentRequest);
-                break;
-        }
-    };
-    bot.on('callback_query', clothes);
-    
+                ]
+            }
+        });
+    }
+
+    switch (action) {
+        case 'sumki':
+            bot.deleteMessage(chatId, messageId);
+            await clothescat(bot, chatId, clothes);
+            break;
+        case 'back':
+            bot.deleteMessage(chatId, messageId);
+            await AssortmentRequest(bot, chatId);
+            break;
+    }
+    bot.off('callback_query');
+    bot.on('callback_query', (query) => clothes(bot, query));
 }
 
 module.exports = {
-    AssortmentRequest
+    AssortmentRequest,
+    clothes
 };
-
-
-//await clothescat(bot, chatId, action);

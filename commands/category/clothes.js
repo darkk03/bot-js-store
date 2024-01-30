@@ -1,6 +1,6 @@
-const { AssortmentRequest } = require('../list-store.js');
+const { clothes } = require('../list-store.js');
 
-async function clothescat(bot, chatId, AssortmentRequest) {
+async function clothescat(bot, chatId) {
     const MongoClient = require('mongodb').MongoClient;
     const url = "mongodb://localhost:27017/";
 
@@ -46,7 +46,7 @@ async function clothescat(bot, chatId, AssortmentRequest) {
 
         if (query.data === 'back') {
             bot.deleteMessage(chatId, messageId);
-            await AssortmentRequest(bot, chatId); 
+            await clothes(bot, callbackQuery); 
         }
     });
 }
