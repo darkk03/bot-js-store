@@ -33,12 +33,12 @@ async function AssortmentRequest(bot, chatId) {
 
 async function clothes(bot, callbackQuery) {
 
-    const action = callbackQuery.data;
+    let action = callbackQuery.data;
     const msg = callbackQuery.message;     
     const chatId = callbackQuery.message.chat.id;
     const messageId = msg.message_id;
 
-    if (action === '1') {
+    if (action === '1' || action === 'back22') {
         bot.deleteMessage(chatId, messageId);
         await bot.sendMessage(chatId, 'Одежда', {
             reply_markup: {
@@ -52,28 +52,34 @@ async function clothes(bot, callbackQuery) {
                         { text: 'Тапки', callback_data: '4' }
                     ],
                     [
-                        { text: 'Назад', callback_data: 'back' }
+                        { text: 'Назад', callback_data: 'back1' }
                     ]
                 ]
             }
         });
     }
+    
 
     switch (action) {
         case 'sumki':
             bot.deleteMessage(chatId, messageId);
-            await clothescat(bot, chatId, clothes);
+            await clothescat(bot, chatId);
             break;
-        case 'back':
+        case 'back1':
             bot.deleteMessage(chatId, messageId);
             await AssortmentRequest(bot, chatId);
+            break;
+        case 'back22':
+            //bot.deleteMessage(chatId, messageId);
+            //await clothes(bot, callbackQuery);
+            action = 'back22';
             break;
     }
     bot.off('callback_query');
     bot.on('callback_query', (query) => clothes(bot, query));
+
 }
 
 module.exports = {
     AssortmentRequest,
-    clothes
 };

@@ -1,5 +1,3 @@
-const { clothes } = require('../list-store.js');
-
 async function clothescat(bot, chatId) {
     const MongoClient = require('mongodb').MongoClient;
     const url = "mongodb://localhost:27017/";
@@ -14,7 +12,7 @@ async function clothescat(bot, chatId) {
 
         for (const product of products) {
             await bot.sendPhoto(chatId, product.info.photoId, {
-                caption: `${product.info.name}\n${product.info.description}\n${product.info.price} руб.`,
+                caption: `${product.info.name}\n ${product.info.description}\n ${product.info.price} руб.`,
             });
         }
 
@@ -26,10 +24,10 @@ async function clothescat(bot, chatId) {
         await bot.sendMessage(chatId, 'Товары категории 1:', {
             reply_markup: {
                 inline_keyboard: [...inlineKeyboard, [
-                    { text: 'Назад', callback_data: 'back' }
+                    { text: 'Назад', callback_data: 'back22' }
                 ]]
             }
-        }); 
+        });
         
     } catch (error) {
         console.error("Error:", error);
@@ -37,18 +35,7 @@ async function clothescat(bot, chatId) {
     } finally {
         await client.close();
     }
-    bot.off('callback_query');
 
-    bot.on('callback_query', async (query) => {
-        const msg = query.message;
-        const chatId = msg.chat.id;
-        const messageId = msg.message_id;
-
-        if (query.data === 'back') {
-            bot.deleteMessage(chatId, messageId);
-            await clothes(bot, callbackQuery); 
-        }
-    });
 }
 
 module.exports = {
