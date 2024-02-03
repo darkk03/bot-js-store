@@ -18,7 +18,7 @@ function additem(bot, userId, newProduct) {
 
                     await bot.sendMessage(userId, 'категорию товара:', {
                         reply_markup: {
-                            keyboard: [['Категория 1'], ['Категория 2'], ['Категория 3']],
+                            keyboard: [['кат-рюкзак'], ['кат-обувь'], ['кат-кофта'], ['кат-куртка'], ['кат-штаны']],
                             one_time_keyboard: true
                         }
                     });

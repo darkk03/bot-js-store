@@ -25,7 +25,7 @@ bot.on('message', async (msg) => {
         
         await addUserToDatabase(msg.from.id);
 
-        await bot.sendMessage(chatId, '-', {
+        await bot.sendMessage(chatId, '🤖', {
             reply_markup: {
                 keyboard: keyboard,
                 one_time_keyboard: true,
@@ -34,32 +34,21 @@ bot.on('message', async (msg) => {
         });
     }
 
-    
-
-    switch (true) {
-        case text && text.includes('Ассортимент товаров'):
-            await AssortmentRequest(bot, chatId, msg);
-            break;
-        // case text && text.includes('Заказ'):
-        //     await OrderRequest(bot, chatId);
-        //     break;
-        case text && text.includes('О магазине'):
-            await AboutShopRequest(bot, chatId);
-            break;
-        case text && text.includes('Профиль'):
-            await ProfileRequest(bot, chatId);
-            break;
-        case text && text.includes('Правила'):
-            await RulesRequest(bot, chatId);
-            break;
-        case text && text.includes('Помощь'):
-            await HelpRequest(bot, chatId);
-            break;
-        case text && text.includes('Отзывы'):
-            await ReviewsRequest(bot, chatId);
-            break;
-        case text === '1':
-            await Adminpanel(bot, chatId);
-            break;
+    if (text && text.includes('Ассортимент товаров')) {
+        await AssortmentRequest(bot, chatId);
+    } else if (text && text.includes('Заказ')) {
+        await OrderRequest(bot, chatId);
+    } else if (text && text.includes('О магазине')) {
+        await AboutShopRequest(bot, chatId);
+    } else if (text && text.includes('Профиль')) {
+        await ProfileRequest(bot, chatId);
+    } else if (text && text.includes('Правила')) {
+        await RulesRequest(bot, chatId);
+    } else if (text && text.includes('Помощь')) {
+        await HelpRequest(bot, chatId);
+    } else if (text && text.includes('Отзывы')) {
+        await ReviewsRequest(bot, chatId);
+    } else if (text === '1') {
+        await Adminpanel(bot, chatId);
     }
 });
