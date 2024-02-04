@@ -1,7 +1,7 @@
 const { GetDate } = require('../db/profiledb.js');
 
 async function ProfileRequest(bot, chatId, msg) {
-    const userId = msg.from.id;
+    const userId = msg.from && msg.from.id;
     const userName = msg.from.first_name;
     const user = await GetDate(userId);
     const registrationDate = new Intl.DateTimeFormat('en-US').format(user.registrationDate); 

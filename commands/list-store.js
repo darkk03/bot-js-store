@@ -1,4 +1,5 @@
 const { catbags } = require('./category/catbags.js');
+const { catvpn } = require('./category/subscriptions/catvpn.js');
 
 async function AssortmentRequest(bot, chatId) {
 
@@ -17,15 +18,8 @@ async function AssortmentRequest(bot, chatId) {
                         { text: 'Кино', callback_data: '4' }
                     ],
                     [
-                        { text: 'Apple', callback_data: '5' },
-                        { text: 'Proxy', callback_data: '6' }
-                    ],
-                    [
-                        { text: 'Соц-сети', callback_data: '7' },
-                        { text: 'Музыка', callback_data: '8' }
-                    ],
-                    [
-                        { text: 'Другое', callback_data: '9' }
+                        { text: 'Proxy', callback_data: '5' },
+                        { text: 'Музыка', callback_data: '6' }
                     ]
                 ]
             }
@@ -61,6 +55,11 @@ async function AssortmentRequest(bot, chatId) {
                 }
             });
         }
+        else if (action === '2') {
+            bot.deleteMessage(chatId, messageId);
+            catvpn(bot, chatId, query);
+        }
+        
         switch (action) {
             case 'сумки':
                 bot.deleteMessage(chatId, messageId);
