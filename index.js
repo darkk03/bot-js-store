@@ -10,7 +10,48 @@ const { itemsavaible } = require('./commands/itemsavaible.js');
 
 const token = '6739088421:AAG0w06wkY3qgLElHD8NZoA79UySrfKsNPU'
 const TelegramBot = require('node-telegram-bot-api');
-const bot = new TelegramBot(token, {polling: true});
+const bot = new TelegramBot(token, { polling: true });
+
+const bannedWords = ['скам', 'наебали', 'брут' ];
+
+const lastMessageTime = {};
+
+bot.on('message', async (msg) => {
+    const chatId = msg.chat.id;
+    const userId = msg.from.id;
+    const currentTime = Date.now();
+    const messageText = msg.text ? msg.text.toLowerCase() : '';
+
+    if (lastMessageTime[userId]) {
+        const timePassed = currentTime - lastMessageTime[userId];
+
+        if (timePassed < 86400000) {
+            const member = await bot.getChatMember(chatId, userId);
+            if (member.status !== 'administrator' && member.status !== 'creator') {
+                await bot.deleteMessage(chatId, msg.message_id);
+            }
+            return; 
+        }
+    }
+
+    lastMessageTime[userId] = currentTime;
+
+    const containsBannedWord = bannedWords.some(word => messageText.includes(word));
+
+    if (containsBannedWord) {
+        const member = await bot.getChatMember(chatId, userId);
+        if (member.status !== 'administrator' && member.status !== 'creator') {
+            bot.deleteMessage(chatId, msg.message_id)
+                .then(() => {
+                    console.log(`Deleted message from ${msg.from.username} (${msg.from.id})`);
+                })
+                .catch((error) => {
+                    console.error('Error deleting message:', error);
+                });
+        }
+    }
+
+});
 
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
@@ -23,7 +64,7 @@ bot.on('message', async (msg) => {
             ['📜 Правила 📜', '❓ Помощь ❓'],
             ['🌟 Отзывы 🌟']
         ];
-        
+
         await addUserToDatabase(msg.from.id);
 
         await bot.sendMessage(chatId, '🤖', {
@@ -53,3 +94,4 @@ bot.on('message', async (msg) => {
         await Adminpanel(bot, chatId);
     }
 });
+
